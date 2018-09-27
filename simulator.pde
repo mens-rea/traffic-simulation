@@ -25,6 +25,23 @@ int mendiolaR2X = mendiolaX + 300;
 
 Vehicle[] vehicles = new Vehicle[vehicleNo];
 
+/* toggle flags */
+
+boolean openQ2L = false;
+boolean openQ2M = false;
+
+boolean openM2L = false;
+boolean openM2Q = true;
+boolean openM2R = false;
+
+boolean openL2Q = true;
+boolean openL2M = false;
+boolean openL2R = false;
+
+boolean openR2L = false;
+boolean openR2M = false;
+boolean openR2Q = true;
+
 /* from quiapo */
 Vehicle[] vehiclesQ2M = new Vehicle[vehicleNo];
 Vehicle[] vehiclesQ2L = new Vehicle[vehicleNo];
@@ -44,7 +61,7 @@ Vehicle[] vehiclesR2L = new Vehicle[vehicleNo];
 void setup() {
 	size(1270, 1000);
 	stroke(255);
-	println("traffic simulation");
+	println("traffic simulation | current vehicle count: " + vehicleNo);
 
 	/* drawing roads */
 	prepDestinations();
@@ -111,7 +128,7 @@ void startAnimation(int animType){
 		vehiclesL2R[x].evaluateDirection(rectoR2X,rectoY);
 		vehiclesL2M[x].evaluateDirection(mendiolaX,mendiolaY);
 		/* from recto */
-		vehiclesR2Q[x].evaluateDirection(quiapoX,quiapoR2Y);
+		vehiclesR2Q[x].evaluateDirection(quiapoX,quiapoY);
 		vehiclesR2M[x].evaluateDirection(mendiolaX,mendiolaY);
 		vehiclesR2L[x].evaluateDirection(legardaX,legardaR2Y);
 	}
@@ -125,20 +142,45 @@ void draw(){
 
 	for(int x=0; x<vehicles.length; x++){
 		/* from mendiola */
-		vehiclesQ2M[x].move(mendiolaX,mendiolaY);
-		vehiclesQ2L[x].move(legardaX,legardaR2Y);
+		if(openQ2M){
+			vehiclesQ2M[x].move(mendiolaX,mendiolaY);
+		}
+		if(openQ2L){
+			vehiclesQ2L[x].move(legardaX,legardaR2Y);
+		}
+
 		/* from quiapo */
-		vehiclesM2Q[x].move(quiapoX,quiapoY);
-		vehiclesM2R[x].move(rectoR2X,rectoY);
-		vehiclesM2L[x].move(legardaX,legardaR2Y);
+		if(openM2Q){
+			vehiclesM2Q[x].move(quiapoX,quiapoY);
+		}
+		if(openM2R){
+			vehiclesM2R[x].move(rectoR2X,rectoY);
+		}
+		if(openM2L){
+			vehiclesM2L[x].move(legardaX,legardaR2Y);
+		}
+		
 		/* from legarda */
-		vehiclesL2Q[x].move(quiapoX,quiapoY);
-		vehiclesL2R[x].move(rectoR2X,rectoY);
-		vehiclesL2M[x].move(mendiolaX,mendiolaY);
+		if(openL2Q){
+			vehiclesL2Q[x].move(quiapoX,quiapoY);
+		}
+		if(openL2R){
+			vehiclesL2R[x].move(rectoR2X,rectoY);
+		}
+		if(openL2M){
+			vehiclesL2M[x].move(mendiolaX,mendiolaY);
+		}
+		
 		/* from recto */
-		vehiclesR2Q[x].move(quiapoX,quiapoR2Y);
-		vehiclesR2M[x].move(mendiolaX,mendiolaY);
-		vehiclesR2L[x].move(legardaX,legardaR2Y);
+		if(openR2Q){
+			vehiclesR2Q[x].move(quiapoX,quiapoY);
+		}
+		if(openR2M){
+			vehiclesR2M[x].move(mendiolaX,mendiolaY);
+		}
+		if(openR2L){
+			vehiclesR2L[x].move(legardaX,legardaR2Y);
+		}
 	}
 }
 
