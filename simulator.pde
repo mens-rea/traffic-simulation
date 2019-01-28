@@ -1,8 +1,10 @@
-PImage img;
+ /* @pjs preload="mendiola.png"; */
+PImage map;
+
 int posX = 10;
 int poxY = 10;
 
-int vehicleNo = 50;
+int vehicleNo = 100;
 
 Vehicle vehicle1;
 Vehicle vehicle2;
@@ -27,36 +29,56 @@ Vehicle[] vehicles = new Vehicle[vehicleNo];
 
 /* toggle flags */
 
+boolean running = true;
+
 boolean openQ2L = false;
 boolean openQ2M = false;
 
 boolean openM2L = false;
-boolean openM2Q = true;
+boolean openM2Q = false;
 boolean openM2R = false;
 
-boolean openL2Q = true;
+boolean openL2Q = false;
 boolean openL2M = false;
 boolean openL2R = false;
 
 boolean openR2L = false;
 boolean openR2M = false;
-boolean openR2Q = true;
+boolean openR2Q = false;
 
 /* from quiapo */
-Vehicle[] vehiclesQ2M = new Vehicle[vehicleNo];
-Vehicle[] vehiclesQ2L = new Vehicle[vehicleNo];
+Vehicle[] vehiclesQ2M = new Vehicle[vehicleNo]; /* 1 */
+Vehicle[] vehiclesQ2L = new Vehicle[vehicleNo]; /* 2 */
+/* add quiapo to recto */
 /* from mendiola */
-Vehicle[] vehiclesM2Q = new Vehicle[vehicleNo];
-Vehicle[] vehiclesM2R = new Vehicle[vehicleNo];
-Vehicle[] vehiclesM2L = new Vehicle[vehicleNo];
+Vehicle[] vehiclesM2Q = new Vehicle[vehicleNo]; /* 3 */
+Vehicle[] vehiclesM2R = new Vehicle[vehicleNo]; /* 4 */
+Vehicle[] vehiclesM2L = new Vehicle[vehicleNo]; /* 5 */
 /* from legarda */
-Vehicle[] vehiclesL2Q = new Vehicle[vehicleNo];
-Vehicle[] vehiclesL2R = new Vehicle[vehicleNo];
-Vehicle[] vehiclesL2M = new Vehicle[vehicleNo];
+Vehicle[] vehiclesL2Q = new Vehicle[vehicleNo]; /* 6 */
+Vehicle[] vehiclesL2R = new Vehicle[vehicleNo]; /* 7 */
+Vehicle[] vehiclesL2M = new Vehicle[vehicleNo]; /* 8 */ /* remove this */
 /* from recto */
-Vehicle[] vehiclesR2Q = new Vehicle[vehicleNo];
-Vehicle[] vehiclesR2M = new Vehicle[vehicleNo];
-Vehicle[] vehiclesR2L = new Vehicle[vehicleNo];
+Vehicle[] vehiclesR2Q = new Vehicle[vehicleNo]; /* 9 */
+Vehicle[] vehiclesR2M = new Vehicle[vehicleNo]; /* 10 */
+Vehicle[] vehiclesR2L = new Vehicle[vehicleNo]; /* 11 */
+
+/* GRAPH UNORDERED GROUP *
+/* {Q2M, Q2L, Q2R, M2Q, M2R, M2L, L2Q, L2R, R2Q, R2M, R2L} */
+
+Button button1;
+Button button2;
+Button button3;
+Button button4;
+Button button5;
+Button button6;
+Button button7;
+Button button8;
+Button button9;
+Button button10;
+Button button11;
+
+Button play, pause, stop;
 
 void setup() {
 	size(1270, 1000);
@@ -67,6 +89,27 @@ void setup() {
 	prepDestinations();
 
 	startAnimation(1);
+
+	// Load map background
+	map = loadImage("mendiola.png");
+	map.resize(1270, 700);
+	image(map, 0, 0);
+
+	// Control buttons
+	button1 = new Button("1",20,30);
+	button2 = new Button("2",20,55);
+	button3 = new Button("3",20,80);
+	button4 = new Button("4",20,105);
+	button5 = new Button("5",20,130);
+	button6 = new Button("6",50,30);
+	button7 = new Button("7",50,55);
+	button8 = new Button("8",50,80);
+	button9 = new Button("9",50,105);
+	button10 = new Button("10",50,130);
+	button11 = new Button("11",80,30);
+
+	play = new Button("Play", 500, 400);
+	pause = new Button("Pause", 700, 400);
 }
 
 void prepDestinations(){
@@ -138,60 +181,238 @@ void draw(){
 	background(255);
 	fill(0, 20, 150);
 
+	image(map, 0, 0);
+
 	prepDestinations();
 
-	for(int x=0; x<vehicles.length; x++){
-		/* from mendiola */
-		if(openQ2M){
-			vehiclesQ2M[x].move(mendiolaX,mendiolaY);
-		}
-		if(openQ2L){
-			vehiclesQ2L[x].move(legardaX,legardaR2Y);
-		}
+	button1.redraw();
+	button2.redraw();
+	button3.redraw();
+	button4.redraw();
+	button5.redraw();
+	button6.redraw();
+	button7.redraw();
+	button8.redraw();
+	button9.redraw();
+	button10.redraw();
+	button11.redraw();
 
-		/* from quiapo */
-		if(openM2Q){
-			vehiclesM2Q[x].move(quiapoX,quiapoY);
+	play.redraw();
+	pause.redraw();
+
+	if(running){
+
+		for(int x=0; x<vehicles.length; x++){
+			/* from mendiola */
+			if(openQ2M){
+				vehiclesQ2M[x].move(mendiolaX,mendiolaY);
+			}
+			if(openQ2L){
+				vehiclesQ2L[x].move(legardaX,legardaR2Y);
+			}
+
+			/* from quiapo */
+			if(openM2Q){
+				vehiclesM2Q[x].move(quiapoX,quiapoY);
+			}
+			if(openM2R){
+				vehiclesM2R[x].move(rectoR2X,rectoY);
+			}
+			if(openM2L){
+				vehiclesM2L[x].move(legardaX,legardaR2Y);
+			}
+			
+			/* from legarda */
+			if(openL2Q){
+				vehiclesL2Q[x].move(quiapoX,quiapoY);
+			}
+			if(openL2R){
+				vehiclesL2R[x].move(rectoR2X,rectoY);
+			}
+			if(openL2M){
+				vehiclesL2M[x].move(mendiolaX,mendiolaY);
+			}
+			
+			/* from recto */
+			if(openR2Q){
+				vehiclesR2Q[x].move(quiapoX,quiapoY);
+			}
+			if(openR2M){
+				vehiclesR2M[x].move(mendiolaX,mendiolaY);
+			}
+			if(openR2L){
+				vehiclesR2L[x].move(legardaX,legardaR2Y);
+			}
 		}
-		if(openM2R){
-			vehiclesM2R[x].move(rectoR2X,rectoY);
-		}
-		if(openM2L){
-			vehiclesM2L[x].move(legardaX,legardaR2Y);
-		}
-		
-		/* from legarda */
-		if(openL2Q){
-			vehiclesL2Q[x].move(quiapoX,quiapoY);
-		}
-		if(openL2R){
-			vehiclesL2R[x].move(rectoR2X,rectoY);
-		}
-		if(openL2M){
-			vehiclesL2M[x].move(mendiolaX,mendiolaY);
-		}
-		
-		/* from recto */
-		if(openR2Q){
-			vehiclesR2Q[x].move(quiapoX,quiapoY);
-		}
-		if(openR2M){
-			vehiclesR2M[x].move(mendiolaX,mendiolaY);
-		}
-		if(openR2L){
-			vehiclesR2L[x].move(legardaX,legardaR2Y);
+	}
+	else{
+		for(int x=0; x<vehicles.length; x++){
+			if(openQ2M){
+				vehiclesQ2M[x].visualize();
+			}
+			if(openQ2L){
+				vehiclesQ2L[x].visualize();
+			}
+
+			/* from quiapo */
+			if(openM2Q){
+				vehiclesM2Q[x].visualize();
+			}
+			if(openM2R){
+				vehiclesM2R[x].visualize();
+			}
+			if(openM2L){
+				vehiclesM2L[x].visualize();
+			}
+
+			/* from legarda */
+			if(openL2Q){
+				vehiclesL2Q[x].visualize();
+			}
+			if(openL2R){
+				vehiclesL2R[x].visualize();
+			}
+			if(openL2M){
+				vehiclesL2M[x].visualize();
+			}
+
+			/* from recto */
+			if(openR2Q){
+				vehiclesR2Q[x].visualize();
+			}
+			if(openR2M){
+				vehiclesR2M[x].visualize();
+			}
+			if(openR2L){
+				vehiclesR2L[x].visualize();
+			}
 		}
 	}
 }
 
 void mousePressed(){
-	if(mouseX > 400){
-		startAnimation(1);
-		println("vertical");
+	if(button1.clicked(mouseX, mouseY)){
+		openQ2M = button1.toggleOn;
+		startAnimation();
 	}
-	else{
-		startAnimation(2);
-		println("vertical");
+
+	if(button2.clicked(mouseX, mouseY)){
+		openQ2L = button2.toggleOn;
+		startAnimation();
+	}
+
+	if(button3.clicked(mouseX, mouseY)){
+		openM2Q = button3.toggleOn;
+		startAnimation();
+	}
+
+	if(button4.clicked(mouseX, mouseY)){
+		openM2R = button4.toggleOn;
+		startAnimation();
+	}
+
+	if(button5.clicked(mouseX, mouseY)){
+		openM2L = button5.toggleOn;
+		startAnimation();
+	}
+
+	if(button6.clicked(mouseX, mouseY)){
+		openL2Q = button6.toggleOn;
+		startAnimation();
+	}
+
+	if(button7.clicked(mouseX, mouseY)){
+		openL2R = button7.toggleOn;
+		startAnimation();
+	}
+
+	if(button8.clicked(mouseX, mouseY)){
+		openL2M = button8.toggleOn;
+		startAnimation();
+	}
+
+	if(button9.clicked(mouseX, mouseY)){
+		openR2Q = button9.toggleOn;
+		startAnimation();
+	}
+
+	if(button10.clicked(mouseX, mouseY)){
+		openR2M = button10.toggleOn;
+		startAnimation();
+	}
+
+	if(button11.clicked(mouseX, mouseY)){
+		openR2L = button11.toggleOn;
+		startAnimation();
+	}
+
+	if(play.clicked(mouseX, mouseY)){
+		running = true;
+	}
+
+	if(pause.clicked(mouseX, mouseY)){
+		running = false;
+	}
+}
+
+class Button{
+	String name = "0";
+	int posX = 200;
+	int posY = 200;
+	int height = 20;
+	int width = 20;
+	boolean toggleOn = false;
+	int redToggle = 0;
+	int greenToggle = 255;
+
+	Button(String name, int posX, int posY){
+		this.name = name;
+		this.posX = posX;
+		this.posY = posY;
+
+		ellipse(posX,posY,width,height);
+		text(name,posX,posY+20);
+	}
+
+	void redraw(){
+		fill(redToggle,greenToggle,0);
+		ellipse(posX,posY,width,height);
+		fill(255);
+		text(name,posX-3,posY+3);
+	}
+
+	boolean clicked(int pointX, int pointY){
+		boolean hitX = false;
+		boolean hitY = false;
+		
+		for(int x=(posX-width/2); x<(posX+width/2); x++){
+			if(x==pointX){
+				hitX = true;
+			}
+		}
+
+		for(int y=(posY-height/2); y<(posY+height/2); y++){
+			if(y==pointY){
+				hitY = true;
+			}
+		}
+
+		if(hitX && hitY){
+			if(toggleOn){
+				toggleOn = false;
+				greenToggle = 255;
+				redToggle = 0;
+			}
+			else{
+				toggleOn = true;
+				greenToggle = 0;
+				redToggle = 255;
+			}
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 }
 
@@ -269,10 +490,7 @@ class Vehicle{
 			gearShift = 1;
 		}
 
-		if(!reachedX || !reachedY){
-			visualize();
-		}
-		
+		visualize();
 	}
 
 	void visualize(){
@@ -288,14 +506,18 @@ class Vehicle{
 			bodyHeight = 5;
 		}
 
-		if(this.type == 1){
-			rect(this.posX+this.offsetX, this.posY+this.offsetY, bodyWidth, bodyHeight);
-		}
-		else if(this.type == 2){
-			rect(this.posX+this.offsetX, this.posY+this.offsetY, bodyWidth*2, bodyHeight*2);
-		}
-		else{
-			rect(this.posX+this.offsetX, this.posY+this.offsetY, bodyWidth*2, bodyHeight+2);
+		if(!reachedX || !reachedY){
+			fill(0,0,255);
+			// private vehicles (cars)
+			if(this.type == 1){
+				rect(this.posX+this.offsetX, this.posY+this.offsetY, bodyWidth, bodyHeight);
+			} // public vehicles (bus)
+			else if(this.type == 2){
+				rect(this.posX+this.offsetX, this.posY+this.offsetY, bodyWidth*2, bodyHeight*2);
+			} // public vehicles (jeep)
+			else{
+				rect(this.posX+this.offsetX, this.posY+this.offsetY, bodyWidth*2, bodyHeight+2);
+			}
 		}
 	}
 }
